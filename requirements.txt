@@ -1,0 +1,13 @@
+baostock
+dolphindb
+apscheduler
+chinesecalendar
+pydantic-settings
+pydantic
+tenacity
+pandas
+pyyaml
+pyinstaller
+requests
+mplfinance
+matplotlib

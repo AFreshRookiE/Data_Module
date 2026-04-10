@@ -7,5 +7,6 @@ build/
 *.spec
 logs/
 backfill_progress.txt
+debug.log
 .env
 .trae/

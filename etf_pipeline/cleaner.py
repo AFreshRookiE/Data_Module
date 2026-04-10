@@ -15,7 +15,7 @@ from etf_pipeline.models import CleanSummary
 
 __all__ = ["DataCleaner", "EmptyDataError"]
 
-# AKShare 原始中文列名 → 标准英文列名映射
+# 数据源中文列名 → 标准英文列名映射
 _COLUMN_MAP: dict[str, str] = {
     "日期": "date",
     "开盘": "open",

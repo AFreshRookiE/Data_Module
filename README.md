@@ -102,7 +102,7 @@ python generate_kline.py
 ## 项目结构
 
 ```
-AKShare_Module/
+Data_Module/
 ├── config.yaml              # 配置文件（DolphinDB 连接、调度时间等）
 ├── requirements.txt         # Python 依赖
 ├── run_once.py              # 手动触发入口（双击运行）

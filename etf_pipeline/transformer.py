@@ -13,7 +13,7 @@ import pandas as pd
 
 __all__ = ["DataTransformer", "COLUMN_MAP"]
 
-# AKShare 原始列名 → 标准列名映射
+# 数据源列名 → 标准列名映射
 COLUMN_MAP = {
     "日期": "date",
     "开盘": "open",

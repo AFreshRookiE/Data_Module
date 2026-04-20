@@ -1,12 +1,12 @@
 __pycache__/
 *.pyc
 *.pyo
-*.egg-info/
 dist/
 build/
 *.spec
 logs/
-backfill_progress.txt
-debug.log
+cache/
+backfill_progress/
+data/export/
+*.egg-info/
 .env
-.trae/

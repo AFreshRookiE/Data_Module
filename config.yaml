@@ -2,17 +2,51 @@ dolphindb:
   host: "localhost"
   port: 8848
   username: "admin"
-  password: "123456"   # 可由环境变量 DOLPHINDB__PASSWORD 覆盖
+  password: "123456"
 
-schedule_time: "18:00"       # 每日触发时间，HH:MM 格式
-fetch_retry_times: 3         # 数据接口重试次数
-fetch_retry_interval: 10     # 数据接口重试间隔（秒）
-db_retry_times: 3            # DolphinDB 连接重试次数
-db_retry_interval: 15        # DolphinDB 连接重试间隔（秒）
+dolphindb_path: "D:\\dolphinDB\\server\\dolphindb.exe"
 
-run_log_dir: "logs/run"      # 运行日志目录
-error_log_dir: "logs/error"  # 错误日志目录
-log_retention_days: 30       # 日志保留天数
+schedule_time: "18:00"
+fetch_retry_times: 3
+fetch_retry_interval: 10
+db_retry_times: 3
+db_retry_interval: 15
 
-db_path: "dfs://etf_db"      # DolphinDB 数据库路径
-table_name: "etf_daily"      # DolphinDB 表名
+run_log_dir: "logs/run"
+error_log_dir: "logs/error"
+log_retention_days: 30
+
+db_path: "dfs://etf_db"
+
+tables:
+  etf_daily: "etf_daily"
+  etf_nav: "etf_nav"
+  index_daily: "index_daily"
+  adjust_factor: "adjust_factor"
+  etf_metadata: "etf_metadata"
+  etf_premium: "etf_premium"
+
+tracking_indices:
+  - "sh.000300"
+  - "sh.000905"
+  - "sh.000852"
+  - "sh.000016"
+  - "sh.000903"
+  - "sz.399006"
+  - "sz.399673"
+  - "sh.000688"
+  - "sh.000001"
+  - "sz.399001"
+  - "sz.399005"
+  - "sh.000015"
+  - "sh.000688"
+  - "sh.000918"
+
+etf_classification_file: "etf_classification.yaml"
+
+export:
+  enabled: true
+  output_dir: "data/export"
+  format: "parquet"
+
+cache_recovery_on_startup: true

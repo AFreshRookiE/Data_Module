@@ -4,57 +4,93 @@
 定义管道内部使用的数据传输对象（dataclass）。
 """
 
-__all__ = ["CleanSummary", "WriteResult"]
+__all__ = [
+    "CleanSummary",
+    "ValidationSummary",
+    "WriteResult",
+    "PipelineResult",
+    "ExportResult",
+    "TableInfo",
+]
 
 from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any
 
 
 @dataclass
 class CleanSummary:
-    """数据清洗汇总信息。
-
-    记录 DataCleaner.clean() 执行后的统计结果，
-    用于 TaskRunner 写入运行日志和质量评估。
-
-    Attributes:
-        input_count: 清洗前输入的记录总数。
-        pass_count:  通过全部清洗规则的记录数。
-        drop_count:  被任意规则丢弃的记录数。
-                     恒满足：input_count == pass_count + drop_count。
-        rule_counts: 各规则触发次数，键固定为 C1–C4。
-                     同一条记录只被最先匹配的规则计数一次，
-                     因此各值之和 <= drop_count。
-                     - C1: 价格字段为空或非正值
-                     - C2: high < low（最高价低于最低价）
-                     - C3: 成交量或成交额为负
-                     - C4: symbol 格式无效
-    """
+    """数据清洗汇总信息。"""
 
     input_count: int
     pass_count: int
     drop_count: int
     rule_counts: dict[str, int] = field(
-        default_factory=lambda: {"C1": 0, "C2": 0, "C3": 0, "C4": 0}
+        default_factory=lambda: {"C1": 0, "C2": 0, "C3": 0, "C4": 0, "C5": 0, "C6": 0, "C7": 0}
+    )
+    warning_counts: dict[str, int] = field(
+        default_factory=lambda: {"W1": 0, "W2": 0}
+    )
+
+
+@dataclass
+class ValidationSummary:
+    """业务级校验汇总信息（post-transform）。"""
+
+    input_count: int
+    pass_count: int
+    drop_count: int
+    rule_counts: dict[str, int] = field(
+        default_factory=lambda: {"V1": 0}
     )
 
 
 @dataclass
 class WriteResult:
-    """数据写入结果汇总。
-
-    记录 DataWriter.write() 执行后的统计结果，
-    用于 TaskRunner 写入运行日志和触发质量警告。
-
-    Attributes:
-        success_count:       成功 upsert 到 DolphinDB 的记录数。
-        skip_count:          DataFetcher 阶段因接口失败而跳过的 ETF 数量。
-        drop_count:          DataCleaner 阶段被清洗规则丢弃的记录数。
-        has_quality_warning: 当成功率 < 90% 时为 True，表示本次运行存在数据质量问题。
-                             成功率 = success_count / (success_count + drop_count)，
-                             skip_count 不计入分母。
-    """
+    """数据写入结果汇总。"""
 
     success_count: int
     skip_count: int
     drop_count: int
     has_quality_warning: bool
+    table_name: str = ""
+
+
+@dataclass
+class PipelineResult:
+    """单条管道执行结果。"""
+
+    pipeline_name: str
+    table_name: str
+    success: bool
+    record_count: int = 0
+    skip_count: int = 0
+    drop_count: int = 0
+    error_message: str = ""
+    elapsed_seconds: float = 0.0
+
+
+@dataclass
+class ExportResult:
+    """Parquet 导出结果。"""
+
+    success: bool
+    table_name: str
+    file_count: int = 0
+    total_records: int = 0
+    output_dir: str = ""
+    manifest_path: str = ""
+    error_message: str = ""
+
+
+@dataclass
+class TableInfo:
+    """DolphinDB 表元信息，用于 manifest.json。"""
+
+    table_name: str
+    record_count: int = 0
+    symbol_count: int = 0
+    date_range_start: str = ""
+    date_range_end: str = ""
+    last_updated: str = field(default_factory=lambda: datetime.now().isoformat())
+    columns: list[str] = field(default_factory=list)
